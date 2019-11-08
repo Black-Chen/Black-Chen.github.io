@@ -6,15 +6,44 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: tree | Black&#39;s Blog</title>
+  <title>Java字节码浅析 | Black&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Black&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/tree/index.html">
+  <meta name="description" content="1.字节码格式初探 1.1.准备测试java类： 1.2.使用javap命令分析字节码文件 1.3.从二进制的角度查看字节码   2.Java字节码的魔数与版本 2.1.魔数 2.2.版本号   3.Java字节码的常量池 3.1.常量池的基本结构 3.2.JVM定义的11种常量 3.3.常量池元素的复合结构 3.5.第一个常量池元素 3.6.第三个常量池元素 3.7.变量型常量池元素   4.">
+<meta name="keywords" content="jvm,字节码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java字节码浅析">
+<meta property="og:url" content="http://yoursite.com/2019/11/08/jvm-class-file/index.html">
 <meta property="og:site_name" content="Black&#39;s Blog">
+<meta property="og:description" content="1.字节码格式初探 1.1.准备测试java类： 1.2.使用javap命令分析字节码文件 1.3.从二进制的角度查看字节码   2.Java字节码的魔数与版本 2.1.魔数 2.2.版本号   3.Java字节码的常量池 3.1.常量池的基本结构 3.2.JVM定义的11种常量 3.3.常量池元素的复合结构 3.5.第一个常量池元素 3.6.第三个常量池元素 3.7.变量型常量池元素   4.">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/001.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/002.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/003.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/004.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/005.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/006.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/007.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/008.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/009.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/010.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/011.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/012.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/013.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/014.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/015.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/016.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/017.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/018.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/019.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/020.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/024.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/025.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/026.png">
+<meta property="og:updated_time" content="2019-11-08T09:28:55.903Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Black&#39;s Blog">
+<meta name="twitter:title" content="Java字节码浅析">
+<meta name="twitter:description" content="1.字节码格式初探 1.1.准备测试java类： 1.2.使用javap命令分析字节码文件 1.3.从二进制的角度查看字节码   2.Java字节码的魔数与版本 2.1.魔数 2.2.版本号   3.Java字节码的常量池 3.1.常量池的基本结构 3.2.JVM定义的11种常量 3.3.常量池元素的复合结构 3.5.第一个常量池元素 3.6.第三个常量池元素 3.7.变量型常量池元素   4.">
+<meta name="twitter:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/001.png">
   
     <link rel="alternative" href="/atom.xml" title="Black&#39;s Blog" type="application/atom+xml">
   
@@ -142,114 +171,638 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-jvm-class-file" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/18/leet-code-113/" class="archive-article-date">
-  	<time datetime="2019-10-18T07:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-18</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/18/leet-code-113/">113.Path Sum II</a>
+    <h1 class="article-title" itemprop="name">
+      Java字节码浅析
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/11/08/jvm-class-file/" class="archive-article-date">
+  	<time datetime="2019-11-08T07:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1%E5%AD%97%E8%8A%82%E7%A0%81%E6%A0%BC%E5%BC%8F%E5%88%9D%E6%8E%A2">1.字节码格式初探</a><ul>
+<li><a href="#11%E5%87%86%E5%A4%87%E6%B5%8B%E8%AF%95java%E7%B1%BB">1.1.准备测试java类：</a></li>
+<li><a href="#12%E4%BD%BF%E7%94%A8javap%E5%91%BD%E4%BB%A4%E5%88%86%E6%9E%90%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6">1.2.使用javap命令分析字节码文件</a></li>
+<li><a href="#13%E4%BB%8E%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%9A%84%E8%A7%92%E5%BA%A6%E6%9F%A5%E7%9C%8B%E5%AD%97%E8%8A%82%E7%A0%81">1.3.从二进制的角度查看字节码</a></li>
+</ul>
+</li>
+<li><a href="#2java%E5%AD%97%E8%8A%82%E7%A0%81%E7%9A%84%E9%AD%94%E6%95%B0%E4%B8%8E%E7%89%88%E6%9C%AC">2.Java字节码的魔数与版本</a><ul>
+<li><a href="#21%E9%AD%94%E6%95%B0">2.1.魔数</a></li>
+<li><a href="#22%E7%89%88%E6%9C%AC%E5%8F%B7">2.2.版本号</a></li>
+</ul>
+</li>
+<li><a href="#3java%E5%AD%97%E8%8A%82%E7%A0%81%E7%9A%84%E5%B8%B8%E9%87%8F%E6%B1%A0">3.Java字节码的常量池</a><ul>
+<li><a href="#31%E5%B8%B8%E9%87%8F%E6%B1%A0%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84">3.1.常量池的基本结构</a></li>
+<li><a href="#32jvm%E5%AE%9A%E4%B9%89%E7%9A%8411%E7%A7%8D%E5%B8%B8%E9%87%8F">3.2.JVM定义的11种常量</a></li>
+<li><a href="#33%E5%B8%B8%E9%87%8F%E6%B1%A0%E5%85%83%E7%B4%A0%E7%9A%84%E5%A4%8D%E5%90%88%E7%BB%93%E6%9E%84">3.3.常量池元素的复合结构</a></li>
+<li><a href="#35%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%B8%B8%E9%87%8F%E6%B1%A0%E5%85%83%E7%B4%A0">3.5.第一个常量池元素</a></li>
+<li><a href="#36%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%B8%B8%E9%87%8F%E6%B1%A0%E5%85%83%E7%B4%A0">3.6.第三个常量池元素</a></li>
+<li><a href="#37%E5%8F%98%E9%87%8F%E5%9E%8B%E5%B8%B8%E9%87%8F%E6%B1%A0%E5%85%83%E7%B4%A0">3.7.变量型常量池元素</a></li>
+</ul>
+</li>
+<li><a href="#4java%E5%AD%97%E8%8A%82%E7%A0%81%E7%9A%84%E7%B1%BB%E7%BB%A7%E6%89%BF">4.Java字节码的类继承</a><ul>
+<li><a href="#41access_flag">4.1.access_flag</a></li>
+<li><a href="#42this_class">4.2.this_class</a></li>
+<li><a href="#43super_class">4.3.super_class</a></li>
+<li><a href="#44interface">4.4.interface</a></li>
+</ul>
+</li>
+<li><a href="#5java%E5%AD%97%E8%8A%82%E7%A0%81%E7%9A%84%E5%AD%97%E6%AE%B5%E5%AD%98%E5%82%A8">5.Java字节码的字段存储</a><ul>
+<li><a href="#51fields_count">5.1.fields_count</a></li>
+<li><a href="#52field_info_fieldsfields_count">5.2.field_info_fields[fields_count]</a><ul>
+<li><a href="#521fields%E7%BB%93%E6%9E%84%E7%9A%84%E7%BB%84%E6%88%90%E6%A0%BC%E5%BC%8F">5.2.1.fields结构的组成格式</a></li>
+<li><a href="#522%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%98%E9%87%8Fa">5.2.2.第一个变量a</a></li>
+<li><a href="#523%E5%8F%98%E9%87%8Fsi%E5%92%8Cs">5.2.3.变量si和s</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6java%E5%AD%97%E8%8A%82%E7%A0%81%E7%9A%84%E6%96%B9%E6%B3%95%E6%A0%BC%E5%BC%8F">6.Java字节码的方法格式</a><ul>
+<li><a href="#61methods_count">6.1.methods_count</a></li>
+<li><a href="#62methodsmethods_count">6.2.methods[methods_count]</a><ul>
+<li><a href="#621methods%E7%BB%93%E6%9E%84%E7%9A%84%E7%BB%84%E6%88%90%E6%A0%BC%E5%BC%8F">6.2.1.methods结构的组成格式</a></li>
+<li><a href="#622-9%E5%A4%A7%E5%B1%9E%E6%80%A7%E8%A1%A8%E9%9B%86%E5%90%88">6.2.2. 9大属性表集合</a><ul>
+<li><a href="#1code%E5%B1%9E%E6%80%A7">1)Code属性</a></li>
+<li><a href="#2constantvalue%E5%B1%9E%E6%80%A7">2)ConstantValue属性</a></li>
+<li><a href="#3exception%E5%B1%9E%E6%80%A7">3)Exception属性</a></li>
+<li><a href="#4innerclasses%E5%B1%9E%E6%80%A7">4)InnerClasses属性</a></li>
+<li><a href="#5linenumbertable%E5%B1%9E%E6%80%A7">5)LineNumberTable属性</a></li>
+<li><a href="#6localvariabletable">6)LocalVariableTable</a></li>
+<li><a href="#7sourcefile%E5%B1%9E%E6%80%A7">7)SourceFile属性</a></li>
+<li><a href="#8deprecated%E5%B1%9E%E6%80%A7%E5%92%8Csynthetic%E5%B1%9E%E6%80%A7">8)Deprecated属性和Synthetic属性</a></li>
+</ul>
+</li>
+<li><a href="#623void-clinit-%E6%96%B9%E6%B3%95">6.2.3.void <clinit>() 方法</clinit></a></li>
+<li><a href="#624void-clinit%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E5%B1%9E%E6%80%A7%E8%A1%A8">6.2.4.void <clinit>()方法中的属性表</clinit></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">7.参考资料</a></li>
+</ul>
+<h1 id="1-字节码格式初探"><a href="#1-字节码格式初探" class="headerlink" title="1.字节码格式初探"></a>1.字节码格式初探</h1><h2 id="1-1-准备测试java类："><a href="#1-1-准备测试java类：" class="headerlink" title="1.1.准备测试java类："></a>1.1.准备测试java类：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> a = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">static</span> Integer si = <span class="number">6</span>;</span><br><span class="line">    String s = <span class="string">"Hello World!"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Test test = <span class="keyword">new</span> Test();</span><br><span class="line">        test.a = <span class="number">8</span>;</span><br><span class="line">        si = <span class="number">9</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.a = a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-使用javap命令分析字节码文件"><a href="#1-2-使用javap命令分析字节码文件" class="headerlink" title="1.2.使用javap命令分析字节码文件"></a>1.2.使用javap命令分析字节码文件</h2><p>字节码文件示例：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/001.png" alt><br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/002.png" alt><br>注意：每一次执行javap 命令所输出的信息内容一定是相同的，但是信息的先后顺序不保证完全一致，例如常量池中的元素编号(常量池索引)每次都不保证相同。</p>
+<h2 id="1-3-从二进制的角度查看字节码"><a href="#1-3-从二进制的角度查看字节码" class="headerlink" title="1.3.从二进制的角度查看字节码"></a>1.3.从二进制的角度查看字节码</h2><p><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/003.png" alt><br>JVM规定了具体的格式来解读上面这些数字，下面我们就使用这个例子来进行逐个分析</p>
+<h1 id="2-Java字节码的魔数与版本"><a href="#2-Java字节码的魔数与版本" class="headerlink" title="2.Java字节码的魔数与版本"></a>2.Java字节码的魔数与版本</h1><h2 id="2-1-魔数"><a href="#2-1-魔数" class="headerlink" title="2.1.魔数"></a>2.1.魔数</h2><p>所有的.class字节码文件的开始4个字节都是魔数，并且其值一定是0xCAFEBABE。如果初始的4个字节不是0xCAFEBABE，那么JVM将会认为这个文件不是.class文件而拒绝解析。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/004.png" alt></p>
+<h2 id="2-2-版本号"><a href="#2-2-版本号" class="headerlink" title="2.2.版本号"></a>2.2.版本号</h2><p>根据字节码文件规范，魔数之后的4个字节为版本信息，前两个字节是主版本号，后两个字节是次版本号。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/005.png" alt></p>
+<h1 id="3-Java字节码的常量池"><a href="#3-Java字节码的常量池" class="headerlink" title="3.Java字节码的常量池"></a>3.Java字节码的常量池</h1><p>常量池是.class字节码文件中非常重要和核心的内容，一个Java类中的绝大多数信息都由常量池描述，尤其是类中定义的变量和方法，都由常量池保存。JVM堆区中的常量池就是用于保存每一个Java类所对应的常量池信息的。</p>
+<h2 id="3-1-常量池的基本结构"><a href="#3-1-常量池的基本结构" class="headerlink" title="3.1.常量池的基本结构"></a>3.1.常量池的基本结构</h2><p>常量池主要由两个部分组成，分别是常量池数量，常量池数组。常量池数量紧跟在次版本号后面，占2个字节。而常量池数组则紧跟在常量池数量之后。</p>
+<p>常量池数组中不同的元素的类型、结构、长度都是不同的，但是每一种元素的第一个数据都是一个u1类型的标志位，占一个字节。JVM在解析常量池时，需要根据这个标志位来判断该元素的具体类型。</p>
+<p>使用结构化的方式来描述常量池数组的编排，就类似于：tag1元素内容1tag2元素内容2…tagn元素内容n<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/006.png" alt></p>
+<h2 id="3-2-JVM定义的11种常量"><a href="#3-2-JVM定义的11种常量" class="headerlink" title="3.2.JVM定义的11种常量"></a>3.2.JVM定义的11种常量</h2><p>具体的定义可以通过JVM虚拟机源码中的jvm.h头文件进行查看。<br>常量池元素名称 | tag位标识 | 含义<br>-|-|-<br>CONSTANT_Uft8_info | 1 | UFT-8编码的字节码<br>CONSTANT_Integer_info | 3 | 整形字面量<br>CONSTANT_Float_info | 4 | 浮点型字面量<br>CONSTANT_Long_info | 5 | 长整型字面量<br>CONSTANT_Double_info | 6 | 双精度字面量<br>CONSTANT_Class_info | 7 | 类或接口的符号引用<br>CONSTANT_String_info | 8 | 字符串字面量<br>CONSTANT_Fieldref_info | 9 | 字段的符号引用<br>CONSTANT_Methodref_info | 10 | 类中方法的符号引用<br>CONSTANT_InterfaceMethodref_info | 11 | 接口中方法的符号引用<br>CONSTANT_NameAndType_info | 12 | 字段和方法的名称以及类型的符号引用<br>其中，类的方法信息、接口和继承信息、属性信息都是定义在NameAndType_info中的，关于这个结构，接下来会详细说明。</p>
+<h2 id="3-3-常量池元素的复合结构"><a href="#3-3-常量池元素的复合结构" class="headerlink" title="3.3.常量池元素的复合结构"></a>3.3.常量池元素的复合结构</h2><table>
+  <tr>
+    <th>类型</th>
+    <th>结构</th>
+    <th>类型</th>
+    <th>描述</th>
+  </tr>
+  <tr>
+    <td rowspan="3">CONSTANT_Uft8_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为1</td>
+  </tr>
+  <tr>
+    <td>length</td>
+    <td>u2</td>
+    <td>UTF-8缩略编码字符串占用字节数</td>
+  </tr>
+  <tr>
+    <td>bytes</td>
+    <td>u1</td>
+    <td>长度为length的UTF-8编码字符串</td>
+  </tr>
+  <tr>
+    <td rowspan="2">CONSTANT_Integer_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为3</td>
+  </tr>
+  <tr>
+    <td>bytes</td>
+    <td>u4</td>
+    <td>按照高位在前存储的int值</td>
+  </tr>
+  <tr>
+    <td rowspan="2">CONSTANT_Float_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为4</td>
+  </tr>
+  <tr>
+    <td>bytes</td>
+    <td>u4</td>
+    <td>按照高位在前存储的float值</td>
+  </tr>
+  <tr>
+    <td rowspan="2">CONSTANT_Long_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为5</td>
+  </tr>
+  <tr>
+    <td>bytes</td>
+    <td>u8</td>
+    <td>按照高位在前存储的long值</td>
+  </tr>
+  <tr>
+    <td rowspan="2">CONSTANT_Double_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为6</td>
+  </tr>
+  <tr>
+    <td>bytes</td>
+    <td>u8</td>
+    <td>按照高位在前存储的double值</td>
+  </tr>
+  <tr>
+    <td rowspan="2">CONSTANT_Class_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为7</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向全限定名常量项的索引</td>
+  </tr>
+  <tr>
+    <td rowspan="2">CONSTANT_String_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为8</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向字符串字面量的索引</td>
+  </tr>
+  <tr>
+    <td rowspan="3">CONSTANT_Fieldref_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为9</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向声明字段的类或接口描述符CONSTANT_Class_info的索引项</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向字段描述符CONSTANT_NameAndType_info的索引项</td>
+  </tr>
+  <tr>
+    <td rowspan="3">CONSTANT_Methodref_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为10</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向声明方法的类描述符CONSTANT_Class_info的索引项</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向字段描述符CONSTANT_NameAndType_info的索引项</td>
+  </tr>
+  <tr>
+    <td rowspan="3">CONSTANT_InterfaceMethodref_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为11</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向声明方法的类描述符CONSTANT_Class_info的索引项</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向字段描述符CONSTANT_NameAndType_info的索引项</td>
+  </tr>
+  <tr>
+    <td rowspan="3">CONSTANT_NameAndType_info</td>
+    <td>tag</td>
+    <td>u1</td>
+    <td>值为12</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向该字段或方法名称常量项的索引</td>
+  </tr>
+  <tr>
+    <td>index</td>
+    <td>u2</td>
+    <td>指向该字段或方法描述符常量项的索引</td>
+  </tr>
+</table>
+下面就开始正式分析常量池字节码。
+## 3.4.常量池元素的总数量
+从字节码文件的第9个字节开始的一大段字节流都用于描述常量池数组信息。其中，第9和第10字节用于描述常量池元素的总数量。从图中可以看到常量池数组大小是0x2B，转换为10进制就是43，由于JVM规定，不使用第0个元素，所以实际上一共有32个常量池元素。
+
+<p><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/007.png" alt></p>
+<h2 id="3-5-第一个常量池元素"><a href="#3-5-第一个常量池元素" class="headerlink" title="3.5.第一个常量池元素"></a>3.5.第一个常量池元素</h2><p>常量池数量之后，就是常量池数组。每一个常量池元素都以tag开始，每个tag都占1字节长度。</p>
+<p>按照之前常量池元素复合结构可知，tag位值为10的是CONSTANT_Methodref_info，即类中方法的符号引用，这种类型的元素结构组成如下：</p>
+<p>tag标志位 1字节，index 2字节，index 2字节</p>
+<p>那么tag标志位占据第11个字节，接下来的12-15字节将两两结合来分别表示两个index。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/008.png" alt></p>
+<h2 id="3-6-第三个常量池元素"><a href="#3-6-第三个常量池元素" class="headerlink" title="3.6.第三个常量池元素"></a>3.6.第三个常量池元素</h2><p>第二个常量池元素跟第一个常量池元素结构类似，就不再具体分析，下面看一下第三个常量池元素。该元素第一个字节是08，代表是CONSTANT_String_info类型，其结构为：</p>
+<p>tag 1字节，index 2字节。 其中index指向的是字符串字面量在常量池中的索引位置，转换为10进制是33。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/009.png" alt><br>其中33下标表示的常量池元素如下所示，其中第一个字节是01，代表CONSTANT_Uft8_info类型，其结构为：</p>
+<p>tag 1字节，length 2字节 0x000C = 12，bytes 长度为length的UTF-8编码字符串 即 0x48656C6C 6F20576F 726C6421 = “Hello World!”。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/010.png" alt></p>
+<h2 id="3-7-变量型常量池元素"><a href="#3-7-变量型常量池元素" class="headerlink" title="3.7.变量型常量池元素"></a>3.7.变量型常量池元素</h2><p>看类成员变量a的信息，如下图所示：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/011.png" alt><br>图中标记的8个字节，一共包含了两个常量池元素信息，这两个元素的tag都为1，所以都是字符串。第一个常量的length为1，其bytes值为0x61 = ‘a’。第二个常量的length为1，其bytes为 0x49 = ‘I’。而在JVM规范中，变量的类型如果是I，则表示该变量的实际类型为int。</p>
+<h1 id="4-Java字节码的类继承"><a href="#4-Java字节码的类继承" class="headerlink" title="4.Java字节码的类继承"></a>4.Java字节码的类继承</h1><h2 id="4-1-access-flag"><a href="#4-1-access-flag" class="headerlink" title="4.1.access_flag"></a>4.1.access_flag</h2><p>常量池数组之后，紧跟着的是access_flags结构，该结构类型是u2，占2字节。其代表访问标志位，用于标注类或接口层次的访问信息，如当前的Class是类还是接口，是否是public类型，是否是abstract类型等。</p>
+<p>access_flags的可选值列表：<br>标志名称 | 标志值 | 含义<br>-|-|-<br>ACC_PUBLIC | 0x0001 | 是否是public类型<br>ACC_FINAL | 0x0010 | 是否被声明为final,只有类可设置<br>ACC_SUPER | 0x0020 | 是否允许使用invokespecial字节码指令，JDK1.2以后编译的类这个标志一定为真<br>ACC_INTERFACE | 0x0200 | 标识这是一个接口<br>ACC_ABSTRACT | 0x0400 | 是否是abstract类型，对于接口和抽象类，该标识为真，否则为假<br>ACC_SYNTHETIC | 0x1000 | 标识这个类并非由用户代码产生<br>ACC_ANNOTATION | 0x2000 | 标识这是一个注解<br>ACC_ENUM | 0x4000 | 标识这是一个枚举<br>由于Test.class文件中的access_flags=0x0021，所以该类的访问标识既包含ACC_PUBLIC也包含ACC_SUPER。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/012.png" alt></p>
+<h2 id="4-2-this-class"><a href="#4-2-this-class" class="headerlink" title="4.2.this_class"></a>4.2.this_class</h2><p>在access_flags只有的是this_class结构，this_class记录当前类的全限定名(包名+类名)，其值指向常量池中对应的索引值。</p>
+<p>由下图可知，this_class的值为5，指向5号常量池元素。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/013.png" alt><br>5号常量池元素如下图所示，为CONSTANT_Class_info类型，其index指向了0x0023=35，即35号常量池元素的位置：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/014.png" alt><br>35号常量池元素如下图所示，为CONSTANT_Utf8_info类型，其长度为4，其值为0x54657374=”Test”，由此可知，this_class的值就是Test：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/015.png" alt></p>
+<h2 id="4-3-super-class"><a href="#4-3-super-class" class="headerlink" title="4.3.super_class"></a>4.3.super_class</h2><p>this_class之后，是super_class结构，类型为u2，占两个字节。作用是记录当前类的父类全限定名，其值指向常量池中对应的索引值。</p>
+<p>有下图可知，其最终指向9号常量池元素。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/016.png" alt><br>9号常量池元素如下图，为CONSTANT_Class_info类型，其index指向了0x0027=39，即39号常量池元素的位置<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/017.png" alt><br>39号常量池元素如下图所示，为CONSTANT_Utf8_info类型，其长度为16，其值为0x6A617661 2F6C616E 672F4F62 6A656374=”java/lang/Object”，由于Test.class并未显式继承任何基类，所以编译时默认继承java.lang.Object，与字节码中的super_class值是一致的：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/018.png" alt></p>
+<h2 id="4-4-interface"><a href="#4-4-interface" class="headerlink" title="4.4.interface"></a>4.4.interface</h2><p>super_class结构后，紧接着的是interfaces_count结构，该结构占据2个字节，用来记录当前类所实现的结构数量。由于Test.class没有实现接口，所以值为0。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/019.png" alt><br>在interfaces_count不为0的情况下，紧跟interfaces_count后有一组u2类型的数据集合，用来描述当前类实现了哪些接口。由于Test.class没有实现接口，所以字节码文件中没有这些信息。</p>
+<h1 id="5-Java字节码的字段存储"><a href="#5-Java字节码的字段存储" class="headerlink" title="5.Java字节码的字段存储"></a>5.Java字节码的字段存储</h1><h2 id="5-1-fields-count"><a href="#5-1-fields-count" class="headerlink" title="5.1.fields_count"></a>5.1.fields_count</h2><p>在interface之后的结构是fields_count，占2个字节，用来描述当前类中所定义的变量的总数量，包括类成员变量和静态变量(类变量)。</p>
+<p>从下图中，可以看出fields_count = 3，这跟我们的Test源文件中的变量定义数量一致。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/020.png" alt></p>
+<h2 id="5-2-field-info-fields-fields-count"><a href="#5-2-field-info-fields-fields-count" class="headerlink" title="5.2.field_info_fields[fields_count]"></a>5.2.field_info_fields[fields_count]</h2><p>接下来是fields结构，该结构长度不固定，不同的变量类型所占的长度是不同的。fields记录类中所定义的各个变量的详细信息，包括变量名、变量类型、访问标识、属性等。</p>
+<h3 id="5-2-1-fields结构的组成格式"><a href="#5-2-1-fields结构的组成格式" class="headerlink" title="5.2.1.fields结构的组成格式"></a>5.2.1.fields结构的组成格式</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>access_flags</td>
+<td>1</td>
+<td>变量的访问标识，值可选</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>name_index</td>
+<td>1</td>
+<td>变量的简单名称引用，指向常量池索引</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>descriptor_index</td>
+<td>1</td>
+<td>变量的类型信息引用，指向常量池索引</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>attributes_count</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>attribute_info</td>
+<td>attributes</td>
+<td>attributes_count</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>access_flags的可选值如下表，其中ACC_PUBLIC，ACC_RPIVATE，ACC_PRODUCTED这3个标识只能选一个，接口中的字段则必须有ACC_PUBLIC，ACC_STATIC和ACC_FINAL标识。</p>
+<table>
+<thead>
+<tr>
+<th>标识名称</th>
+<th>标识值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>字段是否为public</td>
+</tr>
+<tr>
+<td>ACC_RPIVATE</td>
+<td>0x0002</td>
+<td>字段是否为private</td>
+</tr>
+<tr>
+<td>ACC_PRODUCTED</td>
+<td>0x0004</td>
+<td>字段是否为producted</td>
+</tr>
+<tr>
+<td>ACC_STATIC</td>
+<td>0x0008</td>
+<td>字段是否为static</td>
+</tr>
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>字段是否为final</td>
+</tr>
+<tr>
+<td>ACC_VOLATILE</td>
+<td>0x0040</td>
+<td>字段是否为volatile</td>
+</tr>
+<tr>
+<td>ACC_TRANSIENT</td>
+<td>0x0080</td>
+<td>字段是否为transient</td>
+</tr>
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>字段是否为编译器自动产生</td>
+</tr>
+<tr>
+<td>ACC_ENUM</td>
+<td>0x4000</td>
+<td>字段是否为enum</td>
+</tr>
+<tr>
+<td>### 5.2.2.第一个变量a</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>第一个fields紧跟在fields_count之后</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>![](</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/021.png" target="_blank" rel="noopener">https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/021.png</a>)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>其access_flags为1，表示ACC_PUBLIC；而名称的索引是0x000A，类型的索引是0x000B，属性的数量为0，所以attributes元素也不存在。按照javap -verbose打印的字节码常量池信息可知，常量池第10，第11个元素信息是：</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>![](</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/022.png" target="_blank" rel="noopener">https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/022.png</a>)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>### 5.2.3.变量si和s</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>接下来的两个变量si和s的分析与a类似，就不再赘述。</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>![](</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/023.png" target="_blank" rel="noopener">https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/023.png</a>)</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="6-Java字节码的方法格式"><a href="#6-Java字节码的方法格式" class="headerlink" title="6.Java字节码的方法格式"></a>6.Java字节码的方法格式</h1><h2 id="6-1-methods-count"><a href="#6-1-methods-count" class="headerlink" title="6.1.methods_count"></a>6.1.methods_count</h2><p>fields结构后是methods_count结构，占2字节，用来描述类中一共包含多少个方法。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/024.png" alt></p>
+<p>这里显示Test类中有4个方法，但是实际我们在Test中只定义了两个方法，这是因为，在编译期间，编译器会自动为一个类增加 void <clinit>()方法，其方法名就是“<clinit>”，返回值为void。</clinit></clinit></p>
+<p>这个方法的主要作用是执行类的初始化，源程序中所有的static类型的变量都在这个方法中完成初始化。同时，由于我们没有为Test类定义构造函数，因此编辑器会为Test类添加一个默认的构造函数。</p>
+<p>所以会显示字节码文件有4个方法。</p>
+<h2 id="6-2-methods-methods-count"><a href="#6-2-methods-methods-count" class="headerlink" title="6.2.methods[methods_count]"></a>6.2.methods[methods_count]</h2><h3 id="6-2-1-methods结构的组成格式"><a href="#6-2-1-methods结构的组成格式" class="headerlink" title="6.2.1.methods结构的组成格式"></a>6.2.1.methods结构的组成格式</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>access_flags</td>
+<td>1</td>
+<td>变量的访问标识，值可选</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>name_index</td>
+<td>1</td>
+<td>变量的简单名称引用，指向常量池索引</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>descriptor_index</td>
+<td>1</td>
+<td>变量的类型信息引用，指向常量池索引</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>attributes_count</td>
+<td>1</td>
+<td>属性的数量</td>
+</tr>
+<tr>
+<td>attribute_info</td>
+<td>attributes</td>
+<td>attributes_count</td>
+<td>属性的描述</td>
+</tr>
+</tbody></table>
+<p>其中access_flags的可选值与字段相比有所不同，实际在JVM代码中，access_flags是统一定义在jvm.h文件中，一些通用的标识值都是共用的。<br>标识名称 | 标识值 | 含义<br>-|-|-<br>ACC_PUBLIC | 0x0001 | 方法是否为public<br>ACC_RPIVATE | 0x0002 | 方法是否为private<br>ACC_PRODUCTED | 0x0004 | 方法是否为producted<br>ACC_STATIC | 0x0008 | 方法是否为static<br>ACC_FINAL | 0x0010 | 方法是否为final<br>ACC_SYNCRONIZED | 0x0020 | 方法是否为syncronized<br>ACC_BRIDGE | 0x0040 | 方法是否为编译器产生的桥接方法<br>ACC_VARARGS | 0x0080 | 方法是否接收不定参数<br>ACC_NATIVE | 0x0100 | 方法是否为native<br>ACC_ABSTRACT | 0x0400 | 方法是否为abstract<br>ACC_STRICTFP | 0x1000 | 方法是否为strictfp<br>ACC_SYNTHETIC | 0x1000 | 方法是否为编译器自动产生</p>
+<h3 id="6-2-2-9大属性表集合"><a href="#6-2-2-9大属性表集合" class="headerlink" title="6.2.2. 9大属性表集合"></a>6.2.2. 9大属性表集合</h3><p>在分析方法结构及其属性之前，我们有必要先了解attributes这一个字段结构的组成形式。</p>
+<p>为了能够正确解析class文件，虚拟机规范中预定义了虚拟机实现必须能够识别的9项属性，如下表所示。这9种属性的每一种属性又都是一个符合结构，并且都由一个u2类型的属性名称开始，该u2类型的属性名称指向常量池中对应的元素。<br>属性名称 | 使用位置 | 含义<br>-|-|-<br>Code | 方法表 | Java代码编译成的字节码指令<br>ConstantValue | 字段表 | static和final关键字定义的常量值<br>Deprecated | 类文件、字段表、方法表 | 被声明为deprecated的方法和字段<br>Exceptions | 方法表 | 方法抛出的异常<br>InnerClass | 类文件 | 内部类列表<br>LineNumberTable | Code属性 | Java源码的行号与字节码指令的对应关系<br>LocalVariableTable | Code属性 | 方法的局部变量描述<br>SourceFile | 类文件 | 源文件名称<br>Synthetic | 类文件、方法表、字段表 | 标识方法或字段是由编译器自动生成的</p>
+<h4 id="1-Code属性"><a href="#1-Code属性" class="headerlink" title="1)Code属性"></a>1)Code属性</h4><p>Java程序方法体中的代码经过javac编译器处理后，最终变为字节码指令存储在Code属性中(接口中的方法或抽象方法不存在Code属性)。Code属性的结构如下表所示：<br>类型  名称  数量  含义<br>-|-|-|-<br>u2  attribute_name_index    1   属性名称索引<br>u4  attribute_length    1   属性长度<br>u2  max_stack   1   操作数栈深度最大值，在方法执行的任何时刻，操作数栈深度都不会超过这个值。虚拟机运行时根据这个值来分配栈帧的操作数栈深度。<br>u2  max_locals  1   局部比变量表所需的存储空间，单位为Slot。当一个局部变量的生命周期结束后，其占用的slot将分配给其他存活的局部变量使用。<br>u4  code_length 1   存放字节码指令的长度<br>u1  code    code_length 具体的指令<br>u2  exception_table_length  1   异常表长度<br>exception_info  exception_table exception_table_length  具体的异常信息<br>u2  attributes_count    1   属性个数<br>attribute_info  attributes  attributes_count    属性的描述</p>
+<h4 id="2-ConstantValue属性"><a href="#2-ConstantValue属性" class="headerlink" title="2)ConstantValue属性"></a>2)ConstantValue属性</h4><p>ConstantValue属性通知虚拟机自动为静态变量赋值，只有被static关键字修饰的变量才可以使用这项属性。其结构如下所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度，固定为0x00000002<br>u2 | constantvalue_index | 1 | 常量池字面量类型常量的索引<br>ConstantValue属性只支持基本类型和字符串类型，只有这些类型的变量被static关键字修饰后，才使用ContantValue属性进行初始化，否则在<clinit>函数中进行初始化。</clinit></p>
+<h4 id="3-Exception属性"><a href="#3-Exception属性" class="headerlink" title="3)Exception属性"></a>3)Exception属性</h4><p>该属性列举出方法中可能抛出的异常(即方法描述时throws关键字后列出的异常)，与Code属性平级，与Code属性包含的异常表不同，其结构如下表所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | number_of_exception | 1 | 表示可能抛出的异常种类个数<br>u2 | exception_index_table | number_of_exception | 异常索引集合，一组u2类型的exception_index集合，每个exception_index为一个指向常量池中的一个CONSTANT_Class_info常量索引，表示该异常的类型。</p>
+<h4 id="4-InnerClasses属性"><a href="#4-InnerClasses属性" class="headerlink" title="4)InnerClasses属性"></a>4)InnerClasses属性</h4><p>该属性用于记录内部类和宿主类之间的关系。如果一个类中定义了内部类，编译器将会为这个类与这个类包含的内部类生成InnerClass属性，其结构如下表所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | number_of_classes | 1 | 内部类的个数<br>inner_classes_info | inner_classes | number_of_classes | 内部类信息表<br>inner_classes_info结构如下所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | inner_class_info_index | 1 | 指向常量池中的CONSTANT_Class_info类型的常量索引，CONSTANT_Class_info常量会指向内部类全限定名的CONSTANT_Utf8_info常量。<br>u2 | outer_class_info_index | 1 | 指向常量池中的CONSTANT_Class_info类型的常量索引，CONSTANT_Class_info常量会指向宿主类全限定名的CONSTANT_Utf8_info常量。<br>u2 | inner_name_index | 1 | 指向常量池中的CONSTANT_Utf8_info类型常量的索引，为内部类名称，匿名内部类时，该值为0.<br>u2 | inner_name_access_flags | 1 | 内部类的访问标识，可选值与之前的类的访问标识一致。</p>
+<h4 id="5-LineNumberTable属性"><a href="#5-LineNumberTable属性" class="headerlink" title="5)LineNumberTable属性"></a>5)LineNumberTable属性</h4><p>用来描述Java源码的行号与字节码行号之间的对应关系，非运行是必需，会默认生成在class文件中。可以使用javac的-g:none或-g:lines命令关闭或生成该属性信息，其结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | line_number_table_length | 1 | lineNumber表长度<br>line_number_info | line_number_table | line_number_table_length | Java源码行号与字节码行号的对应关系</p>
+<p>line_number_info的结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | start_pc | 1 | 字节码行号<br>u2 | line_number | 1 | Java源码行号<br>不生成该属性的影响：<br><strong>抛出异常时，堆栈将不会显示出错的行号。</strong><br><strong>调试程序时，无法按照源码设置断点。</strong></p>
+<h4 id="6-LocalVariableTable"><a href="#6-LocalVariableTable" class="headerlink" title="6)LocalVariableTable"></a>6)LocalVariableTable</h4><p>用于描述栈帧中局部变量表中的变量与Java源码中定义的变量之间的关系，非运行时必需，默认不生成到class文件中。可以使用javac的-g:none或-g:vars命令关闭或生成该属性，其结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | local_variable_table_length | 1 | 局部变量表中变量的长度<br>local_variable_info | local_variable_table | local_variable_table_length | 局部变量表中的变量与Java源码中定义的变量之间的关系</p>
+<p>local_variable_info的结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | start_pc | 1 | 局部变量的生命周期开始的字节码偏移量<br>u2 | length | 1 | 局部变量作用范围覆盖的长度<br>u2 | name_index | 1 | 指向常量池中CONSTANT_Utf8_info类型常量的索引，局部变量名称<br>u2 | descriptor_index | 1 | 指向常量池中CONSTANT_Utf8_info类型常量的索引，局部变量描述符<br>u2 | index | 1 | 局部变量在栈帧局部变量表中的Slot的位置，如果这个变量的数据类型为64位类型(long or double)，它占用的slot为index和index+1两个位置<br>start_pc+length即为该局部变量在字节码中的作用域范围。</p>
+<p>不生成该属性的影响是：<br><strong>当其他人引用这个方法时，所有的参数名称都将丢失，IDE可能会使用诸如arg0、arg1之类的占位符替代原有的参数名称，对代码运行无影响。</strong><br><strong>调试时调试器无法根据参数名称从运行上下文中获取参数值。</strong></p>
+<h4 id="7-SourceFile属性"><a href="#7-SourceFile属性" class="headerlink" title="7)SourceFile属性"></a>7)SourceFile属性</h4><p>用于记录生成这个class文件的源码文件名称，可选项，默认会生成到class文件中。可以使用javac的-g:none或-g:source命令关闭或生成该属性，其结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | sourcefile_index | 1 | 指向常量池中CONSTANT_Utf8_info类型常量的索引，源文件名</p>
+<p>不生成该属性的影响是：<br><strong>当类名与文件名不一致时(如内部类)，如果抛出异常，堆栈中将不会显示出错误代码所属的文件名。</strong></p>
+<h4 id="8-Deprecated属性和Synthetic属性"><a href="#8-Deprecated属性和Synthetic属性" class="headerlink" title="8)Deprecated属性和Synthetic属性"></a>8)Deprecated属性和Synthetic属性</h4><p>这两个属性都属于标识类型的布尔属性，只存在有和没有的区别，没有属性的概念。</p>
+<p>Deprecated属性表示某个类、字段或方法已经被程序作者定为不再推荐使用，在代码中使用@Deprecated注解进行设置。</p>
+<p>Synthetic属性表示该字段或方法不是由Java源码直接产生的，而是由编译器自行添加的。</p>
+<p>这两项属性的结构如下所示，当然其中attribute_length的值一定是0x00000000：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度</p>
+<h3 id="6-2-3-void-方法"><a href="#6-2-3-void-方法" class="headerlink" title="6.2.3.void () 方法"></a>6.2.3.void <clinit>() 方法</clinit></h3><p><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/025.png" alt><br>按照methods的结构格式，前两个字节描述access_flags，其值为0x0008=ACC_STATIC，说明是一个静态方法。</p>
+<p>接下来的两个字节0x001C描述的是方法名，其值指向的是常量池元素的索引，根据上文使用java -verbose命令打印的常量池可知，第28号元素是”<clinit>“。</clinit></p>
+<p>再接下载的两个字节0x0011描述的是方法的出入参信息，参考其对应的常量池常量可知其值为”()V”，这表示当前没有入参，并且返回值为void。</p>
+<p>根据这些信息可知，这段接下来的字节码是描述方法 void <clinit>()的。</clinit></p>
+<p>接下来的0x0001字节描述的是attributes_count，属性长度，其值为1。</p>
+<p>接下来的字节码将描述对应的属性，由于属性的前两个字节会描述属性的名称，所以通过解析接下来的字节0x0012得到常量池18号元素的值”Code”，说明这个属性是Code属性。接下来的字节将按照Code属性的结构进行解析。</p>
+<p>按照Code属性的结构，属性名称后的4个字节是描述属性长度的0x00000021=33。</p>
+<p>紧跟在attributes_length之后的是2个字节的max_stack和2个字节的max_locals，其值分别为0x0001=1和0x0000=0.</p>
+<p>接下来是4个字节的code_length，其值为0x00000009 = 9，说明接下来的9个字节都是JVM的字节码指令。</p>
+<p>9个字节码指令分别是 10 06 B8 00 07 B3 00 08 B1。</p>
+<p>下面来分析当前方法的指令逻辑。</p>
+<p>第一个字节是0x10其代表的指令为：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0x10 | bipush | 将单字节的常量值（Byte.MIN_VALUE ～ Byte.MAX_VALUE，即 -128～127）推送至栈顶<br>该指令后面会跟1字节的操作数，因此需要连着两个字节一起看，其后的1字节是0x06，因此第一个指令所表述的含义是：将整形数字6推送至栈顶。</p>
+<p>第一个指令码结束后，紧接着的1个字节是0xB8，其代表的指令为：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0xb8 | invokestatic | 调用静态方法<br>这个指令属于一元指令码，后面会跟一个占2个字节的数据来指向常量池中的方法编号，后面的两个字节是0x0007，指向常量池的7号元素。</p>
+<p>第7号元素类型是Methodref，其引用了第36，37号常量池元素，第36号元素引用了第40号元素，第37号元素引用了41，42号元素，将它们最终拼凑起来，被调用的方法是：</p>
+<p>java/lang/Integer.valueOf:(I)Ljava/lang/Integer;<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/026.png" alt><br>接下来分析第三条指令，接下来的字节是0xB3，其含义如下：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0xb3 | putstatic | 为指定类的静态字段赋值<br>该指令需要跟一个表明域编号的参数(占2字节)，因此该指令最终占3字节，后面的两个字节的值是0x0008，对应的是常量池中的8号元素，8号元素又引用了其他元素，最终拼凑起来的含义是：</p>
+<p>Test.si:Ljava/lang/Integer;</p>
+<p>这表明最终引用的是Test类中的si静态变量。于是第三条指令的含义就很清晰了，将栈顶的值6赋给Test类中的静态变量si。</p>
+<p>最后一个指令是0xB1,代表的含义是：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0xb1 | return | 从当前方法返回 void<br>至此，void <clinit>()方法的Code属性到此结束。</clinit></p>
+<h3 id="6-2-4-void-方法中的属性表"><a href="#6-2-4-void-方法中的属性表" class="headerlink" title="6.2.4.void ()方法中的属性表"></a>6.2.4.void <clinit>()方法中的属性表</clinit></h3><p>在描述完方法void <clinit>()的Code属性后，接下来的字节流就开始描述该方法所引用的其他属性信息。</clinit></p>
+<p>开始的4个字节表示attributes_count，其值为0x00000001，代表void <clinit>()方法中引用了1个其他属性表。</clinit></p>
+<p>那么接下来的两个字节就表示属性表的类型，其值为0x0013，根据常量池信息可知，第13号元素的值为”LineNumberTable”。</p>
+<p>接下来按照LineNumberTable的结构来分析接下来的字节流，后续的4个字节是属性长度，其值为0x00000006=6，</p>
+<p>接下来的2个字节表示LineNumberTable的长度，其值为0x0001 = 1，表示只有一个line_number_info数据，</p>
+<p>接下来按照line_number_info的结构进行分析，其中start_pc=0x0000 = 0，line_number = 0x000A = 10，与javap -verbose得到的结果一致。</p>
+<p>至此void <clinit>()方法分析完毕，类中的其他方法也可以按照相同的方式进行分析。</clinit></p>
+<h1 id="7-参考资料"><a href="#7-参考资料" class="headerlink" title="7.参考资料"></a>7.参考资料</h1><p><a href="https://blog.csdn.net/wzq6578702/article/details/81271609" target="_blank" rel="noopener">https://blog.csdn.net/wzq6578702/article/details/81271609</a></p>
+<p><a href="https://www.jianshu.com/p/7d623f441bed" target="_blank" rel="noopener">https://www.jianshu.com/p/7d623f441bed</a></p>
+<p><a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.12" target="_blank" rel="noopener">https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.12</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">jvm</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">data structure</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">tree</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">字节码</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/08/jvm-class-file/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/14/leet-code-103/" class="archive-article-date">
-  	<time datetime="2019-10-14T07:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-14</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/10/18/leet-code-113/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">113.Path Sum II</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/14/leet-code-103/">103.Binary Tree Zigzag Level Order Traversal</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">leetcode</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">data structure</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">tree</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -272,9 +825,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
