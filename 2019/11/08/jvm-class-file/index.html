@@ -36,10 +36,13 @@
 <meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/018.png">
 <meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/019.png">
 <meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/020.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/021.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/022.png">
+<meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/023.png">
 <meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/024.png">
 <meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/025.png">
 <meta property="og:image" content="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/026.png">
-<meta property="og:updated_time" content="2019-11-08T09:28:55.903Z">
+<meta property="og:updated_time" content="2019-11-08T09:36:34.383Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java字节码浅析">
 <meta name="twitter:description" content="1.字节码格式初探 1.1.准备测试java类： 1.2.使用javap命令分析字节码文件 1.3.从二进制的角度查看字节码   2.Java字节码的魔数与版本 2.1.魔数 2.2.版本号   3.Java字节码的常量池 3.1.常量池的基本结构 3.2.JVM定义的11种常量 3.3.常量池元素的复合结构 3.5.第一个常量池元素 3.6.第三个常量池元素 3.7.变量型常量池元素   4.">
@@ -262,7 +265,72 @@
 <h2 id="3-1-常量池的基本结构"><a href="#3-1-常量池的基本结构" class="headerlink" title="3.1.常量池的基本结构"></a>3.1.常量池的基本结构</h2><p>常量池主要由两个部分组成，分别是常量池数量，常量池数组。常量池数量紧跟在次版本号后面，占2个字节。而常量池数组则紧跟在常量池数量之后。</p>
 <p>常量池数组中不同的元素的类型、结构、长度都是不同的，但是每一种元素的第一个数据都是一个u1类型的标志位，占一个字节。JVM在解析常量池时，需要根据这个标志位来判断该元素的具体类型。</p>
 <p>使用结构化的方式来描述常量池数组的编排，就类似于：tag1元素内容1tag2元素内容2…tagn元素内容n<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/006.png" alt></p>
-<h2 id="3-2-JVM定义的11种常量"><a href="#3-2-JVM定义的11种常量" class="headerlink" title="3.2.JVM定义的11种常量"></a>3.2.JVM定义的11种常量</h2><p>具体的定义可以通过JVM虚拟机源码中的jvm.h头文件进行查看。<br>常量池元素名称 | tag位标识 | 含义<br>-|-|-<br>CONSTANT_Uft8_info | 1 | UFT-8编码的字节码<br>CONSTANT_Integer_info | 3 | 整形字面量<br>CONSTANT_Float_info | 4 | 浮点型字面量<br>CONSTANT_Long_info | 5 | 长整型字面量<br>CONSTANT_Double_info | 6 | 双精度字面量<br>CONSTANT_Class_info | 7 | 类或接口的符号引用<br>CONSTANT_String_info | 8 | 字符串字面量<br>CONSTANT_Fieldref_info | 9 | 字段的符号引用<br>CONSTANT_Methodref_info | 10 | 类中方法的符号引用<br>CONSTANT_InterfaceMethodref_info | 11 | 接口中方法的符号引用<br>CONSTANT_NameAndType_info | 12 | 字段和方法的名称以及类型的符号引用<br>其中，类的方法信息、接口和继承信息、属性信息都是定义在NameAndType_info中的，关于这个结构，接下来会详细说明。</p>
+<h2 id="3-2-JVM定义的11种常量"><a href="#3-2-JVM定义的11种常量" class="headerlink" title="3.2.JVM定义的11种常量"></a>3.2.JVM定义的11种常量</h2><p>具体的定义可以通过JVM虚拟机源码中的jvm.h头文件进行查看。</p>
+<table>
+<thead>
+<tr>
+<th>常量池元素名称</th>
+<th>tag位标识</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CONSTANT_Uft8_info</td>
+<td>1</td>
+<td>UFT-8编码的字节码</td>
+</tr>
+<tr>
+<td>CONSTANT_Integer_info</td>
+<td>3</td>
+<td>整形字面量</td>
+</tr>
+<tr>
+<td>CONSTANT_Float_info</td>
+<td>4</td>
+<td>浮点型字面量</td>
+</tr>
+<tr>
+<td>CONSTANT_Long_info</td>
+<td>5</td>
+<td>长整型字面量</td>
+</tr>
+<tr>
+<td>CONSTANT_Double_info</td>
+<td>6</td>
+<td>双精度字面量</td>
+</tr>
+<tr>
+<td>CONSTANT_Class_info</td>
+<td>7</td>
+<td>类或接口的符号引用</td>
+</tr>
+<tr>
+<td>CONSTANT_String_info</td>
+<td>8</td>
+<td>字符串字面量</td>
+</tr>
+<tr>
+<td>CONSTANT_Fieldref_info</td>
+<td>9</td>
+<td>字段的符号引用</td>
+</tr>
+<tr>
+<td>CONSTANT_Methodref_info</td>
+<td>10</td>
+<td>类中方法的符号引用</td>
+</tr>
+<tr>
+<td>CONSTANT_InterfaceMethodref_info</td>
+<td>11</td>
+<td>接口中方法的符号引用</td>
+</tr>
+<tr>
+<td>CONSTANT_NameAndType_info</td>
+<td>12</td>
+<td>字段和方法的名称以及类型的符号引用</td>
+</tr>
+</tbody></table>
+<p>其中，类的方法信息、接口和继承信息、属性信息都是定义在NameAndType_info中的，关于这个结构，接下来会详细说明。</p>
 <h2 id="3-3-常量池元素的复合结构"><a href="#3-3-常量池元素的复合结构" class="headerlink" title="3.3.常量池元素的复合结构"></a>3.3.常量池元素的复合结构</h2><table>
   <tr>
     <th>类型</th>
@@ -431,7 +499,57 @@
 <p>tag 1字节，length 2字节 0x000C = 12，bytes 长度为length的UTF-8编码字符串 即 0x48656C6C 6F20576F 726C6421 = “Hello World!”。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/010.png" alt></p>
 <h2 id="3-7-变量型常量池元素"><a href="#3-7-变量型常量池元素" class="headerlink" title="3.7.变量型常量池元素"></a>3.7.变量型常量池元素</h2><p>看类成员变量a的信息，如下图所示：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/011.png" alt><br>图中标记的8个字节，一共包含了两个常量池元素信息，这两个元素的tag都为1，所以都是字符串。第一个常量的length为1，其bytes值为0x61 = ‘a’。第二个常量的length为1，其bytes为 0x49 = ‘I’。而在JVM规范中，变量的类型如果是I，则表示该变量的实际类型为int。</p>
 <h1 id="4-Java字节码的类继承"><a href="#4-Java字节码的类继承" class="headerlink" title="4.Java字节码的类继承"></a>4.Java字节码的类继承</h1><h2 id="4-1-access-flag"><a href="#4-1-access-flag" class="headerlink" title="4.1.access_flag"></a>4.1.access_flag</h2><p>常量池数组之后，紧跟着的是access_flags结构，该结构类型是u2，占2字节。其代表访问标志位，用于标注类或接口层次的访问信息，如当前的Class是类还是接口，是否是public类型，是否是abstract类型等。</p>
-<p>access_flags的可选值列表：<br>标志名称 | 标志值 | 含义<br>-|-|-<br>ACC_PUBLIC | 0x0001 | 是否是public类型<br>ACC_FINAL | 0x0010 | 是否被声明为final,只有类可设置<br>ACC_SUPER | 0x0020 | 是否允许使用invokespecial字节码指令，JDK1.2以后编译的类这个标志一定为真<br>ACC_INTERFACE | 0x0200 | 标识这是一个接口<br>ACC_ABSTRACT | 0x0400 | 是否是abstract类型，对于接口和抽象类，该标识为真，否则为假<br>ACC_SYNTHETIC | 0x1000 | 标识这个类并非由用户代码产生<br>ACC_ANNOTATION | 0x2000 | 标识这是一个注解<br>ACC_ENUM | 0x4000 | 标识这是一个枚举<br>由于Test.class文件中的access_flags=0x0021，所以该类的访问标识既包含ACC_PUBLIC也包含ACC_SUPER。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/012.png" alt></p>
+<p>access_flags的可选值列表：</p>
+<table>
+<thead>
+<tr>
+<th>标志名称</th>
+<th>标志值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>是否是public类型</td>
+</tr>
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>是否被声明为final,只有类可设置</td>
+</tr>
+<tr>
+<td>ACC_SUPER</td>
+<td>0x0020</td>
+<td>是否允许使用invokespecial字节码指令，JDK1.2以后编译的类这个标志一定为真</td>
+</tr>
+<tr>
+<td>ACC_INTERFACE</td>
+<td>0x0200</td>
+<td>标识这是一个接口</td>
+</tr>
+<tr>
+<td>ACC_ABSTRACT</td>
+<td>0x0400</td>
+<td>是否是abstract类型，对于接口和抽象类，该标识为真，否则为假</td>
+</tr>
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>标识这个类并非由用户代码产生</td>
+</tr>
+<tr>
+<td>ACC_ANNOTATION</td>
+<td>0x2000</td>
+<td>标识这是一个注解</td>
+</tr>
+<tr>
+<td>ACC_ENUM</td>
+<td>0x4000</td>
+<td>标识这是一个枚举</td>
+</tr>
+</tbody></table>
+<p>由于Test.class文件中的access_flags=0x0021，所以该类的访问标识既包含ACC_PUBLIC也包含ACC_SUPER。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/012.png" alt></p>
 <h2 id="4-2-this-class"><a href="#4-2-this-class" class="headerlink" title="4.2.this_class"></a>4.2.this_class</h2><p>在access_flags只有的是this_class结构，this_class记录当前类的全限定名(包名+类名)，其值指向常量池中对应的索引值。</p>
 <p>由下图可知，this_class的值为5，指向5号常量池元素。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/013.png" alt><br>5号常量池元素如下图所示，为CONSTANT_Class_info类型，其index指向了0x0023=35，即35号常量池元素的位置：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/014.png" alt><br>35号常量池元素如下图所示，为CONSTANT_Utf8_info类型，其长度为4，其值为0x54657374=”Test”，由此可知，this_class的值就是Test：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/015.png" alt></p>
 <h2 id="4-3-super-class"><a href="#4-3-super-class" class="headerlink" title="4.3.super_class"></a>4.3.super_class</h2><p>this_class之后，是super_class结构，类型为u2，占两个字节。作用是记录当前类的父类全限定名，其值指向常量池中对应的索引值。</p>
@@ -534,62 +652,9 @@
 <td>0x4000</td>
 <td>字段是否为enum</td>
 </tr>
-<tr>
-<td>### 5.2.2.第一个变量a</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>第一个fields紧跟在fields_count之后</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>![](</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/021.png" target="_blank" rel="noopener">https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/021.png</a>)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>其access_flags为1，表示ACC_PUBLIC；而名称的索引是0x000A，类型的索引是0x000B，属性的数量为0，所以attributes元素也不存在。按照javap -verbose打印的字节码常量池信息可知，常量池第10，第11个元素信息是：</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>![](</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/022.png" target="_blank" rel="noopener">https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/022.png</a>)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>### 5.2.3.变量si和s</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>接下来的两个变量si和s的分析与a类似，就不再赘述。</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>![](</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/023.png" target="_blank" rel="noopener">https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/023.png</a>)</td>
-<td></td>
-<td></td>
-</tr>
 </tbody></table>
+<h3 id="5-2-2-第一个变量a"><a href="#5-2-2-第一个变量a" class="headerlink" title="5.2.2.第一个变量a"></a>5.2.2.第一个变量a</h3><p>第一个fields紧跟在fields_count之后<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/021.png" alt><br>其access_flags为1，表示ACC_PUBLIC；而名称的索引是0x000A，类型的索引是0x000B，属性的数量为0，所以attributes元素也不存在。按照javap -verbose打印的字节码常量池信息可知，常量池第10，第11个元素信息是：<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/022.png" alt></p>
+<h3 id="5-2-3-变量si和s"><a href="#5-2-3-变量si和s" class="headerlink" title="5.2.3.变量si和s"></a>5.2.3.变量si和s</h3><p>接下来的两个变量si和s的分析与a类似，就不再赘述。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/023.png" alt></p>
 <h1 id="6-Java字节码的方法格式"><a href="#6-Java字节码的方法格式" class="headerlink" title="6.Java字节码的方法格式"></a>6.Java字节码的方法格式</h1><h2 id="6-1-methods-count"><a href="#6-1-methods-count" class="headerlink" title="6.1.methods_count"></a>6.1.methods_count</h2><p>fields结构后是methods_count结构，占2字节，用来描述类中一共包含多少个方法。<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/024.png" alt></p>
 <p>这里显示Test类中有4个方法，但是实际我们在Test中只定义了两个方法，这是因为，在编译期间，编译器会自动为一个类增加 void <clinit>()方法，其方法名就是“<clinit>”，返回值为void。</clinit></clinit></p>
 <p>这个方法的主要作用是执行类的初始化，源程序中所有的static类型的变量都在这个方法中完成初始化。同时，由于我们没有为Test类定义构造函数，因此编辑器会为Test类添加一个默认的构造函数。</p>
@@ -634,24 +699,531 @@
 <td>属性的描述</td>
 </tr>
 </tbody></table>
-<p>其中access_flags的可选值与字段相比有所不同，实际在JVM代码中，access_flags是统一定义在jvm.h文件中，一些通用的标识值都是共用的。<br>标识名称 | 标识值 | 含义<br>-|-|-<br>ACC_PUBLIC | 0x0001 | 方法是否为public<br>ACC_RPIVATE | 0x0002 | 方法是否为private<br>ACC_PRODUCTED | 0x0004 | 方法是否为producted<br>ACC_STATIC | 0x0008 | 方法是否为static<br>ACC_FINAL | 0x0010 | 方法是否为final<br>ACC_SYNCRONIZED | 0x0020 | 方法是否为syncronized<br>ACC_BRIDGE | 0x0040 | 方法是否为编译器产生的桥接方法<br>ACC_VARARGS | 0x0080 | 方法是否接收不定参数<br>ACC_NATIVE | 0x0100 | 方法是否为native<br>ACC_ABSTRACT | 0x0400 | 方法是否为abstract<br>ACC_STRICTFP | 0x1000 | 方法是否为strictfp<br>ACC_SYNTHETIC | 0x1000 | 方法是否为编译器自动产生</p>
+<p>其中access_flags的可选值与字段相比有所不同，实际在JVM代码中，access_flags是统一定义在jvm.h文件中，一些通用的标识值都是共用的。</p>
+<table>
+<thead>
+<tr>
+<th>标识名称</th>
+<th>标识值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>方法是否为public</td>
+</tr>
+<tr>
+<td>ACC_RPIVATE</td>
+<td>0x0002</td>
+<td>方法是否为private</td>
+</tr>
+<tr>
+<td>ACC_PRODUCTED</td>
+<td>0x0004</td>
+<td>方法是否为producted</td>
+</tr>
+<tr>
+<td>ACC_STATIC</td>
+<td>0x0008</td>
+<td>方法是否为static</td>
+</tr>
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>方法是否为final</td>
+</tr>
+<tr>
+<td>ACC_SYNCRONIZED</td>
+<td>0x0020</td>
+<td>方法是否为syncronized</td>
+</tr>
+<tr>
+<td>ACC_BRIDGE</td>
+<td>0x0040</td>
+<td>方法是否为编译器产生的桥接方法</td>
+</tr>
+<tr>
+<td>ACC_VARARGS</td>
+<td>0x0080</td>
+<td>方法是否接收不定参数</td>
+</tr>
+<tr>
+<td>ACC_NATIVE</td>
+<td>0x0100</td>
+<td>方法是否为native</td>
+</tr>
+<tr>
+<td>ACC_ABSTRACT</td>
+<td>0x0400</td>
+<td>方法是否为abstract</td>
+</tr>
+<tr>
+<td>ACC_STRICTFP</td>
+<td>0x1000</td>
+<td>方法是否为strictfp</td>
+</tr>
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>方法是否为编译器自动产生</td>
+</tr>
+</tbody></table>
 <h3 id="6-2-2-9大属性表集合"><a href="#6-2-2-9大属性表集合" class="headerlink" title="6.2.2. 9大属性表集合"></a>6.2.2. 9大属性表集合</h3><p>在分析方法结构及其属性之前，我们有必要先了解attributes这一个字段结构的组成形式。</p>
-<p>为了能够正确解析class文件，虚拟机规范中预定义了虚拟机实现必须能够识别的9项属性，如下表所示。这9种属性的每一种属性又都是一个符合结构，并且都由一个u2类型的属性名称开始，该u2类型的属性名称指向常量池中对应的元素。<br>属性名称 | 使用位置 | 含义<br>-|-|-<br>Code | 方法表 | Java代码编译成的字节码指令<br>ConstantValue | 字段表 | static和final关键字定义的常量值<br>Deprecated | 类文件、字段表、方法表 | 被声明为deprecated的方法和字段<br>Exceptions | 方法表 | 方法抛出的异常<br>InnerClass | 类文件 | 内部类列表<br>LineNumberTable | Code属性 | Java源码的行号与字节码指令的对应关系<br>LocalVariableTable | Code属性 | 方法的局部变量描述<br>SourceFile | 类文件 | 源文件名称<br>Synthetic | 类文件、方法表、字段表 | 标识方法或字段是由编译器自动生成的</p>
-<h4 id="1-Code属性"><a href="#1-Code属性" class="headerlink" title="1)Code属性"></a>1)Code属性</h4><p>Java程序方法体中的代码经过javac编译器处理后，最终变为字节码指令存储在Code属性中(接口中的方法或抽象方法不存在Code属性)。Code属性的结构如下表所示：<br>类型  名称  数量  含义<br>-|-|-|-<br>u2  attribute_name_index    1   属性名称索引<br>u4  attribute_length    1   属性长度<br>u2  max_stack   1   操作数栈深度最大值，在方法执行的任何时刻，操作数栈深度都不会超过这个值。虚拟机运行时根据这个值来分配栈帧的操作数栈深度。<br>u2  max_locals  1   局部比变量表所需的存储空间，单位为Slot。当一个局部变量的生命周期结束后，其占用的slot将分配给其他存活的局部变量使用。<br>u4  code_length 1   存放字节码指令的长度<br>u1  code    code_length 具体的指令<br>u2  exception_table_length  1   异常表长度<br>exception_info  exception_table exception_table_length  具体的异常信息<br>u2  attributes_count    1   属性个数<br>attribute_info  attributes  attributes_count    属性的描述</p>
-<h4 id="2-ConstantValue属性"><a href="#2-ConstantValue属性" class="headerlink" title="2)ConstantValue属性"></a>2)ConstantValue属性</h4><p>ConstantValue属性通知虚拟机自动为静态变量赋值，只有被static关键字修饰的变量才可以使用这项属性。其结构如下所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度，固定为0x00000002<br>u2 | constantvalue_index | 1 | 常量池字面量类型常量的索引<br>ConstantValue属性只支持基本类型和字符串类型，只有这些类型的变量被static关键字修饰后，才使用ContantValue属性进行初始化，否则在<clinit>函数中进行初始化。</clinit></p>
-<h4 id="3-Exception属性"><a href="#3-Exception属性" class="headerlink" title="3)Exception属性"></a>3)Exception属性</h4><p>该属性列举出方法中可能抛出的异常(即方法描述时throws关键字后列出的异常)，与Code属性平级，与Code属性包含的异常表不同，其结构如下表所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | number_of_exception | 1 | 表示可能抛出的异常种类个数<br>u2 | exception_index_table | number_of_exception | 异常索引集合，一组u2类型的exception_index集合，每个exception_index为一个指向常量池中的一个CONSTANT_Class_info常量索引，表示该异常的类型。</p>
-<h4 id="4-InnerClasses属性"><a href="#4-InnerClasses属性" class="headerlink" title="4)InnerClasses属性"></a>4)InnerClasses属性</h4><p>该属性用于记录内部类和宿主类之间的关系。如果一个类中定义了内部类，编译器将会为这个类与这个类包含的内部类生成InnerClass属性，其结构如下表所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | number_of_classes | 1 | 内部类的个数<br>inner_classes_info | inner_classes | number_of_classes | 内部类信息表<br>inner_classes_info结构如下所示：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | inner_class_info_index | 1 | 指向常量池中的CONSTANT_Class_info类型的常量索引，CONSTANT_Class_info常量会指向内部类全限定名的CONSTANT_Utf8_info常量。<br>u2 | outer_class_info_index | 1 | 指向常量池中的CONSTANT_Class_info类型的常量索引，CONSTANT_Class_info常量会指向宿主类全限定名的CONSTANT_Utf8_info常量。<br>u2 | inner_name_index | 1 | 指向常量池中的CONSTANT_Utf8_info类型常量的索引，为内部类名称，匿名内部类时，该值为0.<br>u2 | inner_name_access_flags | 1 | 内部类的访问标识，可选值与之前的类的访问标识一致。</p>
-<h4 id="5-LineNumberTable属性"><a href="#5-LineNumberTable属性" class="headerlink" title="5)LineNumberTable属性"></a>5)LineNumberTable属性</h4><p>用来描述Java源码的行号与字节码行号之间的对应关系，非运行是必需，会默认生成在class文件中。可以使用javac的-g:none或-g:lines命令关闭或生成该属性信息，其结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | line_number_table_length | 1 | lineNumber表长度<br>line_number_info | line_number_table | line_number_table_length | Java源码行号与字节码行号的对应关系</p>
-<p>line_number_info的结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | start_pc | 1 | 字节码行号<br>u2 | line_number | 1 | Java源码行号<br>不生成该属性的影响：<br><strong>抛出异常时，堆栈将不会显示出错的行号。</strong><br><strong>调试程序时，无法按照源码设置断点。</strong></p>
-<h4 id="6-LocalVariableTable"><a href="#6-LocalVariableTable" class="headerlink" title="6)LocalVariableTable"></a>6)LocalVariableTable</h4><p>用于描述栈帧中局部变量表中的变量与Java源码中定义的变量之间的关系，非运行时必需，默认不生成到class文件中。可以使用javac的-g:none或-g:vars命令关闭或生成该属性，其结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | local_variable_table_length | 1 | 局部变量表中变量的长度<br>local_variable_info | local_variable_table | local_variable_table_length | 局部变量表中的变量与Java源码中定义的变量之间的关系</p>
-<p>local_variable_info的结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | start_pc | 1 | 局部变量的生命周期开始的字节码偏移量<br>u2 | length | 1 | 局部变量作用范围覆盖的长度<br>u2 | name_index | 1 | 指向常量池中CONSTANT_Utf8_info类型常量的索引，局部变量名称<br>u2 | descriptor_index | 1 | 指向常量池中CONSTANT_Utf8_info类型常量的索引，局部变量描述符<br>u2 | index | 1 | 局部变量在栈帧局部变量表中的Slot的位置，如果这个变量的数据类型为64位类型(long or double)，它占用的slot为index和index+1两个位置<br>start_pc+length即为该局部变量在字节码中的作用域范围。</p>
+<p>为了能够正确解析class文件，虚拟机规范中预定义了虚拟机实现必须能够识别的9项属性，如下表所示。这9种属性的每一种属性又都是一个符合结构，并且都由一个u2类型的属性名称开始，该u2类型的属性名称指向常量池中对应的元素。</p>
+<table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>使用位置</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Code</td>
+<td>方法表</td>
+<td>Java代码编译成的字节码指令</td>
+</tr>
+<tr>
+<td>ConstantValue</td>
+<td>字段表</td>
+<td>static和final关键字定义的常量值</td>
+</tr>
+<tr>
+<td>Deprecated</td>
+<td>类文件、字段表、方法表</td>
+<td>被声明为deprecated的方法和字段</td>
+</tr>
+<tr>
+<td>Exceptions</td>
+<td>方法表</td>
+<td>方法抛出的异常</td>
+</tr>
+<tr>
+<td>InnerClass</td>
+<td>类文件</td>
+<td>内部类列表</td>
+</tr>
+<tr>
+<td>LineNumberTable</td>
+<td>Code属性</td>
+<td>Java源码的行号与字节码指令的对应关系</td>
+</tr>
+<tr>
+<td>LocalVariableTable</td>
+<td>Code属性</td>
+<td>方法的局部变量描述</td>
+</tr>
+<tr>
+<td>SourceFile</td>
+<td>类文件</td>
+<td>源文件名称</td>
+</tr>
+<tr>
+<td>Synthetic</td>
+<td>类文件、方法表、字段表</td>
+<td>标识方法或字段是由编译器自动生成的</td>
+</tr>
+</tbody></table>
+<h4 id="1-Code属性"><a href="#1-Code属性" class="headerlink" title="1)Code属性"></a>1)Code属性</h4><p>Java程序方法体中的代码经过javac编译器处理后，最终变为字节码指令存储在Code属性中(接口中的方法或抽象方法不存在Code属性)。Code属性的结构如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>max_stack</td>
+<td>1</td>
+<td>操作数栈深度最大值，在方法执行的任何时刻，操作数栈深度都不会超过这个值。虚拟机运行时根据这个值来分配栈帧的操作数栈深度。</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>max_locals</td>
+<td>1</td>
+<td>局部比变量表所需的存储空间，单位为Slot。当一个局部变量的生命周期结束后，其占用的slot将分配给其他存活的局部变量使用。</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>code_length</td>
+<td>1</td>
+<td>存放字节码指令的长度</td>
+</tr>
+<tr>
+<td>u1</td>
+<td>code</td>
+<td>code_length</td>
+<td>具体的指令</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>exception_table_length</td>
+<td>1</td>
+<td>异常表长度</td>
+</tr>
+<tr>
+<td>exception_info</td>
+<td>exception_table</td>
+<td>exception_table_length</td>
+<td>具体的异常信息</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>attributes_count</td>
+<td>1</td>
+<td>属性个数</td>
+</tr>
+<tr>
+<td>attribute_info</td>
+<td>attributes</td>
+<td>attributes_count</td>
+<td>属性的描述</td>
+</tr>
+</tbody></table>
+<h4 id="2-ConstantValue属性"><a href="#2-ConstantValue属性" class="headerlink" title="2)ConstantValue属性"></a>2)ConstantValue属性</h4><p>ConstantValue属性通知虚拟机自动为静态变量赋值，只有被static关键字修饰的变量才可以使用这项属性。其结构如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度，固定为0x00000002</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>constantvalue_index</td>
+<td>1</td>
+<td>常量池字面量类型常量的索引</td>
+</tr>
+</tbody></table>
+<p>ConstantValue属性只支持基本类型和字符串类型，只有这些类型的变量被static关键字修饰后，才使用ContantValue属性进行初始化，否则在<clinit>函数中进行初始化。</clinit></p>
+<h4 id="3-Exception属性"><a href="#3-Exception属性" class="headerlink" title="3)Exception属性"></a>3)Exception属性</h4><p>该属性列举出方法中可能抛出的异常(即方法描述时throws关键字后列出的异常)，与Code属性平级，与Code属性包含的异常表不同，其结构如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>number_of_exception</td>
+<td>1</td>
+<td>表示可能抛出的异常种类个数</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>exception_index_table</td>
+<td>number_of_exception</td>
+<td>异常索引集合，一组u2类型的exception_index集合，每个exception_index为一个指向常量池中的一个CONSTANT_Class_info常量索引，表示该异常的类型。</td>
+</tr>
+</tbody></table>
+<h4 id="4-InnerClasses属性"><a href="#4-InnerClasses属性" class="headerlink" title="4)InnerClasses属性"></a>4)InnerClasses属性</h4><p>该属性用于记录内部类和宿主类之间的关系。如果一个类中定义了内部类，编译器将会为这个类与这个类包含的内部类生成InnerClass属性，其结构如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>number_of_classes</td>
+<td>1</td>
+<td>内部类的个数</td>
+</tr>
+<tr>
+<td>inner_classes_info</td>
+<td>inner_classes</td>
+<td>number_of_classes</td>
+<td>内部类信息表</td>
+</tr>
+</tbody></table>
+<p>inner_classes_info结构如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>inner_class_info_index</td>
+<td>1</td>
+<td>指向常量池中的CONSTANT_Class_info类型的常量索引，CONSTANT_Class_info常量会指向内部类全限定名的CONSTANT_Utf8_info常量。</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>outer_class_info_index</td>
+<td>1</td>
+<td>指向常量池中的CONSTANT_Class_info类型的常量索引，CONSTANT_Class_info常量会指向宿主类全限定名的CONSTANT_Utf8_info常量。</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>inner_name_index</td>
+<td>1</td>
+<td>指向常量池中的CONSTANT_Utf8_info类型常量的索引，为内部类名称，匿名内部类时，该值为0.</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>inner_name_access_flags</td>
+<td>1</td>
+<td>内部类的访问标识，可选值与之前的类的访问标识一致。</td>
+</tr>
+</tbody></table>
+<h4 id="5-LineNumberTable属性"><a href="#5-LineNumberTable属性" class="headerlink" title="5)LineNumberTable属性"></a>5)LineNumberTable属性</h4><p>用来描述Java源码的行号与字节码行号之间的对应关系，非运行是必需，会默认生成在class文件中。可以使用javac的-g:none或-g:lines命令关闭或生成该属性信息，其结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>line_number_table_length</td>
+<td>1</td>
+<td>lineNumber表长度</td>
+</tr>
+<tr>
+<td>line_number_info</td>
+<td>line_number_table</td>
+<td>line_number_table_length</td>
+<td>Java源码行号与字节码行号的对应关系</td>
+</tr>
+</tbody></table>
+<p>line_number_info的结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>start_pc</td>
+<td>1</td>
+<td>字节码行号</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>line_number</td>
+<td>1</td>
+<td>Java源码行号</td>
+</tr>
+</tbody></table>
+<p>不生成该属性的影响：<br><strong>抛出异常时，堆栈将不会显示出错的行号。</strong><br><strong>调试程序时，无法按照源码设置断点。</strong></p>
+<h4 id="6-LocalVariableTable"><a href="#6-LocalVariableTable" class="headerlink" title="6)LocalVariableTable"></a>6)LocalVariableTable</h4><p>用于描述栈帧中局部变量表中的变量与Java源码中定义的变量之间的关系，非运行时必需，默认不生成到class文件中。可以使用javac的-g:none或-g:vars命令关闭或生成该属性，其结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>local_variable_table_length</td>
+<td>1</td>
+<td>局部变量表中变量的长度</td>
+</tr>
+<tr>
+<td>local_variable_info</td>
+<td>local_variable_table</td>
+<td>local_variable_table_length</td>
+<td>局部变量表中的变量与Java源码中定义的变量之间的关系</td>
+</tr>
+</tbody></table>
+<p>local_variable_info的结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>start_pc</td>
+<td>1</td>
+<td>局部变量的生命周期开始的字节码偏移量</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>length</td>
+<td>1</td>
+<td>局部变量作用范围覆盖的长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>name_index</td>
+<td>1</td>
+<td>指向常量池中CONSTANT_Utf8_info类型常量的索引，局部变量名称</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>descriptor_index</td>
+<td>1</td>
+<td>指向常量池中CONSTANT_Utf8_info类型常量的索引，局部变量描述符</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>index</td>
+<td>1</td>
+<td>局部变量在栈帧局部变量表中的Slot的位置，如果这个变量的数据类型为64位类型(long or double)，它占用的slot为index和index+1两个位置</td>
+</tr>
+</tbody></table>
+<p>start_pc+length即为该局部变量在字节码中的作用域范围。</p>
 <p>不生成该属性的影响是：<br><strong>当其他人引用这个方法时，所有的参数名称都将丢失，IDE可能会使用诸如arg0、arg1之类的占位符替代原有的参数名称，对代码运行无影响。</strong><br><strong>调试时调试器无法根据参数名称从运行上下文中获取参数值。</strong></p>
-<h4 id="7-SourceFile属性"><a href="#7-SourceFile属性" class="headerlink" title="7)SourceFile属性"></a>7)SourceFile属性</h4><p>用于记录生成这个class文件的源码文件名称，可选项，默认会生成到class文件中。可以使用javac的-g:none或-g:source命令关闭或生成该属性，其结构如下：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度<br>u2 | sourcefile_index | 1 | 指向常量池中CONSTANT_Utf8_info类型常量的索引，源文件名</p>
+<h4 id="7-SourceFile属性"><a href="#7-SourceFile属性" class="headerlink" title="7)SourceFile属性"></a>7)SourceFile属性</h4><p>用于记录生成这个class文件的源码文件名称，可选项，默认会生成到class文件中。可以使用javac的-g:none或-g:source命令关闭或生成该属性，其结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>sourcefile_index</td>
+<td>1</td>
+<td>指向常量池中CONSTANT_Utf8_info类型常量的索引，源文件名</td>
+</tr>
+</tbody></table>
 <p>不生成该属性的影响是：<br><strong>当类名与文件名不一致时(如内部类)，如果抛出异常，堆栈中将不会显示出错误代码所属的文件名。</strong></p>
 <h4 id="8-Deprecated属性和Synthetic属性"><a href="#8-Deprecated属性和Synthetic属性" class="headerlink" title="8)Deprecated属性和Synthetic属性"></a>8)Deprecated属性和Synthetic属性</h4><p>这两个属性都属于标识类型的布尔属性，只存在有和没有的区别，没有属性的概念。</p>
 <p>Deprecated属性表示某个类、字段或方法已经被程序作者定为不再推荐使用，在代码中使用@Deprecated注解进行设置。</p>
 <p>Synthetic属性表示该字段或方法不是由Java源码直接产生的，而是由编译器自行添加的。</p>
-<p>这两项属性的结构如下所示，当然其中attribute_length的值一定是0x00000000：<br>类型 | 名称 | 数量 | 含义<br>-|-|-|-<br>u2 | attribute_name_index | 1 | 属性名称索引<br>u4 | attribute_length | 1 | 属性长度</p>
+<p>这两项属性的结构如下所示，当然其中attribute_length的值一定是0x00000000：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u2</td>
+<td>attribute_name_index</td>
+<td>1</td>
+<td>属性名称索引</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>attribute_length</td>
+<td>1</td>
+<td>属性长度</td>
+</tr>
+</tbody></table>
 <h3 id="6-2-3-void-方法"><a href="#6-2-3-void-方法" class="headerlink" title="6.2.3.void () 方法"></a>6.2.3.void <clinit>() 方法</clinit></h3><p><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/025.png" alt><br>按照methods的结构格式，前两个字节描述access_flags，其值为0x0008=ACC_STATIC，说明是一个静态方法。</p>
 <p>接下来的两个字节0x001C描述的是方法名，其值指向的是常量池元素的索引，根据上文使用java -verbose命令打印的常量池可知，第28号元素是”<clinit>“。</clinit></p>
 <p>再接下载的两个字节0x0011描述的是方法的出入参信息，参考其对应的常量池常量可知其值为”()V”，这表示当前没有入参，并且返回值为void。</p>
@@ -663,13 +1235,73 @@
 <p>接下来是4个字节的code_length，其值为0x00000009 = 9，说明接下来的9个字节都是JVM的字节码指令。</p>
 <p>9个字节码指令分别是 10 06 B8 00 07 B3 00 08 B1。</p>
 <p>下面来分析当前方法的指令逻辑。</p>
-<p>第一个字节是0x10其代表的指令为：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0x10 | bipush | 将单字节的常量值（Byte.MIN_VALUE ～ Byte.MAX_VALUE，即 -128～127）推送至栈顶<br>该指令后面会跟1字节的操作数，因此需要连着两个字节一起看，其后的1字节是0x06，因此第一个指令所表述的含义是：将整形数字6推送至栈顶。</p>
-<p>第一个指令码结束后，紧接着的1个字节是0xB8，其代表的指令为：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0xb8 | invokestatic | 调用静态方法<br>这个指令属于一元指令码，后面会跟一个占2个字节的数据来指向常量池中的方法编号，后面的两个字节是0x0007，指向常量池的7号元素。</p>
+<p>第一个字节是0x10其代表的指令为：</p>
+<table>
+<thead>
+<tr>
+<th>字节码</th>
+<th>助记符</th>
+<th>指令含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x10</td>
+<td>bipush</td>
+<td>将单字节的常量值（Byte.MIN_VALUE ～ Byte.MAX_VALUE，即 -128～127）推送至栈顶</td>
+</tr>
+</tbody></table>
+<p>该指令后面会跟1字节的操作数，因此需要连着两个字节一起看，其后的1字节是0x06，因此第一个指令所表述的含义是：将整形数字6推送至栈顶。</p>
+<p>第一个指令码结束后，紧接着的1个字节是0xB8，其代表的指令为：</p>
+<table>
+<thead>
+<tr>
+<th>字节码</th>
+<th>助记符</th>
+<th>指令含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0xb8</td>
+<td>invokestatic</td>
+<td>调用静态方法</td>
+</tr>
+</tbody></table>
+<p>这个指令属于一元指令码，后面会跟一个占2个字节的数据来指向常量池中的方法编号，后面的两个字节是0x0007，指向常量池的7号元素。</p>
 <p>第7号元素类型是Methodref，其引用了第36，37号常量池元素，第36号元素引用了第40号元素，第37号元素引用了41，42号元素，将它们最终拼凑起来，被调用的方法是：</p>
-<p>java/lang/Integer.valueOf:(I)Ljava/lang/Integer;<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/026.png" alt><br>接下来分析第三条指令，接下来的字节是0xB3，其含义如下：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0xb3 | putstatic | 为指定类的静态字段赋值<br>该指令需要跟一个表明域编号的参数(占2字节)，因此该指令最终占3字节，后面的两个字节的值是0x0008，对应的是常量池中的8号元素，8号元素又引用了其他元素，最终拼凑起来的含义是：</p>
+<p>java/lang/Integer.valueOf:(I)Ljava/lang/Integer;<br><img src="https://cda-test-bucket.oss-cn-shenzhen.aliyuncs.com/jvm/bit_code/026.png" alt><br>接下来分析第三条指令，接下来的字节是0xB3，其含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>字节码</th>
+<th>助记符</th>
+<th>指令含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0xb3</td>
+<td>putstatic</td>
+<td>为指定类的静态字段赋值</td>
+</tr>
+</tbody></table>
+<p>该指令需要跟一个表明域编号的参数(占2字节)，因此该指令最终占3字节，后面的两个字节的值是0x0008，对应的是常量池中的8号元素，8号元素又引用了其他元素，最终拼凑起来的含义是：</p>
 <p>Test.si:Ljava/lang/Integer;</p>
 <p>这表明最终引用的是Test类中的si静态变量。于是第三条指令的含义就很清晰了，将栈顶的值6赋给Test类中的静态变量si。</p>
-<p>最后一个指令是0xB1,代表的含义是：<br>字节码 | 助记符 | 指令含义<br>-|-|-<br>0xb1 | return | 从当前方法返回 void<br>至此，void <clinit>()方法的Code属性到此结束。</clinit></p>
+<p>最后一个指令是0xB1,代表的含义是：</p>
+<table>
+<thead>
+<tr>
+<th>字节码</th>
+<th>助记符</th>
+<th>指令含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0xb1</td>
+<td>return</td>
+<td>从当前方法返回 void</td>
+</tr>
+</tbody></table>
+<p>至此，void <clinit>()方法的Code属性到此结束。</clinit></p>
 <h3 id="6-2-4-void-方法中的属性表"><a href="#6-2-4-void-方法中的属性表" class="headerlink" title="6.2.4.void ()方法中的属性表"></a>6.2.4.void <clinit>()方法中的属性表</clinit></h3><p>在描述完方法void <clinit>()的Code属性后，接下来的字节流就开始描述该方法所引用的其他属性信息。</clinit></p>
 <p>开始的4个字节表示attributes_count，其值为0x00000001，代表void <clinit>()方法中引用了1个其他属性表。</clinit></p>
 <p>那么接下来的两个字节就表示属性表的类型，其值为0x0013，根据常量池信息可知，第13号元素的值为”LineNumberTable”。</p>
@@ -895,14 +1527,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">jvm</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">字节码</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
               </li>
              
@@ -911,11 +1535,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">tree</a>
+                <a href="javascript:void(0)" class="js-tag color3">hashMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">hashMap</a>
+                <a href="javascript:void(0)" class="js-tag color4">jvm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">字节码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">tree</a>
               </li>
             
             <div class="clearfix"></div>
